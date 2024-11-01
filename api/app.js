@@ -11,6 +11,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('views', path.join(__dirname, '..', 'views')); // Assuming 'views' is a sibling directory to 'api'
+
 
 // Use memory storage for uploads (or configure a temporary directory)
 const storage = multer.memoryStorage(); // Using memory storage for temporary file handling
