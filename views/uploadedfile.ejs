@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <title>Uploaded Images</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+  </head>
+  <body>
+    <h1 style="font-family: 'Poppins',serif; font-size: 30px;color: rgba(255, 72, 0, 0.959);padding: 30px;">Welcome this is your area 👋</h1>
+    <a href="/"><button style="margin-left: 30px;margin-bottom: 30px;border-radius: 8px; color: black; background-color: rgb(255, 230, 0);border-color: rgb(255, 230, 0);">Add Your Posts</button></a>
+
+    <!-- Loop through each post and display its details in a card -->
+    <div class="container">
+        <div class="row">
+            <% posts.forEach(function(post) { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card" style="width: 100%;">
+                        <img style="width: auto; height: 500px; padding: 10px;object-fit: cover;" src="/uploads/<%= post.image %>" class="card-img-top" alt="User Image">
+                        <div class="card-body">
+                            <h5 class="card-title" style="font-size: 20px;font-family: 'Poppins' ,serif; color: rgba(0, 0, 0, 0.514);"><%= post.name %></h5>
+                            <p class="card-text" style="font-size: 15px;font-family: 'Poppins' ,serif;"><%= post.post %></p>
+                            
+                        </div>
+                    </div>
+                </div>
+            <% }); %> <!-- Closing the forEach loop -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  </body>
+</html>
