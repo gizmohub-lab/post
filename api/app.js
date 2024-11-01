@@ -1,6 +1,4 @@
-// Updated app.js
 const express = require('express');
-const app = express();
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
@@ -8,32 +6,14 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const postModel = require('../models/postmodel');
 
+const app = express();
+
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-app.set('views', path.join(__dirname, '..', 'views'));
-
-// Correct MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
-   
-}).then(() => console.log('Database connected'))
-  .catch((err) => console.error('Database connection error:', err));
-
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '..', 'uploads')); // Ensure this folder exists
-    },
-    filename: function (req, file, cb) {
-        crypto.randomBytes(12, function (err, bytes) {
-            const fn = bytes.toString('hex') + path.extname(file.originalname);
-            cb(null, fn);
-        });
-    }
-});
-
+// Use memory storage for uploads (or configure a temporary directory)
+const storage = multer.memoryStorage(); // Using memory storage for temporary file handling
 const upload = multer({ storage: storage });
 
 // Render the upload file form
@@ -45,7 +25,7 @@ app.get('/', (req, res) => {
 app.post('/uploads', upload.single('image'), async (req, res) => {
     try {
         const { name, post } = req.body;
-        const image = req.file ? req.file.filename : ''; // Assign filename from the uploaded file
+        const image = req.file ? req.file.buffer.toString('base64') : ''; // Convert to Base64 for storage
 
         // Save post to MongoDB
         await postModel.create({ name, post, image });
@@ -72,7 +52,17 @@ app.get('/uploadedfiles', async (req, res) => {
     }
 });
 
+// Connect to MongoDB
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+    throw new Error('MONGODB_URI is not defined');
+}
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Database connected!'))
+    .catch(err => console.error('Database connection error:', err));
+
 // Start the server
 app.listen(3000, () => {
-    console.log('Connected successfully');
+    console.log('Connected successfully on port 3000');
 });
