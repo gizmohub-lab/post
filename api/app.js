@@ -12,6 +12,8 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 console.log('Views directory:', path.join(__dirname, '..', 'views'));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
 
 
 
